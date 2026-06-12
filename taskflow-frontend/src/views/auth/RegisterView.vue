@@ -1,6 +1,209 @@
+<script setup>
+import { computed, onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth.store'
+
+const email = ref('')
+const password = ref('')
+const confirmPassword = ref('')
+const emailInputRef = ref(null)
+
+function useAuth(formEmail, formPassword, formConfirmPassword) {
+  const authStore = useAuthStore()
+  const router = useRouter()
+
+  const error = computed(() => authStore.error)
+  const isLoading = computed(() => authStore.isLoading)
+
+  const handleRegister = async () => {
+    authStore.error = null
+
+    if (!formEmail.value || !formPassword.value || !formConfirmPassword.value) {
+      authStore.error = 'Please complete all fields.'
+      return
+    }
+
+    if (formPassword.value !== formConfirmPassword.value) {
+      authStore.error = 'Passwords do not match.'
+      return
+    }
+
+    const didRegister = await authStore.register(formEmail.value, formPassword.value)
+
+    if (didRegister) {
+      await router.push('/tareas')
+    }
+  }
+
+  return {
+    handleRegister,
+    error,
+    isLoading,
+  }
+}
+
+const { handleRegister, error, isLoading } = useAuth(email, password, confirmPassword)
+
+onMounted(() => {
+  emailInputRef.value?.$el?.querySelector('input')?.focus()
+})
+</script>
+
 <template>
-  <main class="page-shell">
-    <h1>Crear cuenta</h1>
-    <p>Vista de registro para nuevos usuarios.</p>
+  <main class="register-page">
+    <section class="register-card" aria-labelledby="register-title">
+      <div class="register-brand" aria-hidden="true">
+        <span class="register-brand__mark">TF</span>
+      </div>
+
+      <header class="register-header">
+        <p class="register-kicker">Start building your flow</p>
+        <h1 id="register-title">Bienvenido a TaskFlow</h1>
+        <p class="register-copy">Creá tu cuenta para gestionar tareas, equipos y seguimiento en un solo lugar.</p>
+      </header>
+
+      <div v-if="error" class="register-alert" role="alert">
+        {{ error }}
+      </div>
+
+      <form class="register-form" @submit.prevent="handleRegister">
+        <AppInput
+          ref="emailInputRef"
+          v-model="email"
+          type="email"
+          label="Email"
+          placeholder="you@example.com"
+          required
+        />
+
+        <AppInput
+          v-model="password"
+          type="password"
+          label="Password"
+          placeholder="Create a password"
+          required
+        />
+
+        <AppInput
+          v-model="confirmPassword"
+          type="password"
+          label="Confirm password"
+          placeholder="Repeat your password"
+          required
+        />
+
+        <AppButton type="submit" :loading="isLoading" :disabled="isLoading" class="register-submit">
+          Crear cuenta
+        </AppButton>
+      </form>
+
+      <p class="register-footer">
+        Ya tengo cuenta
+        <RouterLink to="/login">Iniciar sesión</RouterLink>
+      </p>
+    </section>
   </main>
 </template>
+
+<style scoped>
+.register-page {
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: 2rem 1.25rem;
+  background:
+    radial-gradient(circle at top, rgba(37, 99, 235, 0.16), transparent 42%),
+    linear-gradient(180deg, #f8fbff 0%, #eef4ff 100%);
+}
+
+.register-card {
+  width: min(100%, 28rem);
+  padding: 2rem;
+  border-radius: 1.5rem;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.12);
+  backdrop-filter: blur(18px);
+}
+
+.register-brand {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.register-brand__mark {
+  width: 3.5rem;
+  height: 3.5rem;
+  display: grid;
+  place-items: center;
+  border-radius: 1rem;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #ffffff;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  box-shadow: 0 16px 32px rgba(37, 99, 235, 0.28);
+}
+
+.register-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.register-kicker {
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #2563eb;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+.register-header h1 {
+  margin: 0;
+  font-size: 2rem;
+  line-height: 1.1;
+}
+
+.register-copy {
+  margin-top: 0.75rem;
+  color: #475569;
+  font-size: 0.98rem;
+}
+
+.register-alert {
+  margin-bottom: 1rem;
+  padding: 0.9rem 1rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(220, 38, 38, 0.25);
+  background: rgba(220, 38, 38, 0.1);
+  color: #b91c1c;
+  font-size: 0.95rem;
+}
+
+.register-form {
+  display: grid;
+  gap: 1rem;
+}
+
+.register-submit {
+  width: 100%;
+}
+
+.register-footer {
+  margin-top: 1.25rem;
+  text-align: center;
+  color: #64748b;
+  font-size: 0.95rem;
+}
+
+.register-footer a {
+  color: #2563eb;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.register-footer a:hover {
+  text-decoration: underline;
+}
+</style>
