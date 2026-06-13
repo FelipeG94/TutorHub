@@ -5,6 +5,7 @@ import { useAuth } from '@/composables/useAuth'
 const { email, password, isLoading, error, handleLogin } = useAuth()
 const emailInputRef = ref(null)
 
+
 onMounted(() => {
   emailInputRef.value?.$el?.querySelector('input')?.focus()
 })

@@ -20,7 +20,7 @@ const handleLogout = async () => {
 <template>
   <AppNavbar
     v-if="isAuthenticated"
-    :is-authenticated="isAuthenticated"
+    :user="authStore.user"
     :is-admin="isAdmin"
     @logout="handleLogout"
   />

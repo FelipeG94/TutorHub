@@ -1,10 +1,58 @@
 <script setup>
+<<<<<<< HEAD
 import { onMounted, ref } from 'vue'
 import { useAuth } from '@/composables/useAuth'
 
 const { email, password, confirmPassword, isLoading, error, handleRegister } = useAuth()
 const emailInputRef = ref(null)
 
+=======
+import { computed, onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth.store'
+
+const email = ref('')
+const password = ref('')
+const confirmPassword = ref('')
+const emailInputRef = ref(null)
+
+function useAuth(formEmail, formPassword, formConfirmPassword) {
+  const authStore = useAuthStore()
+  const router = useRouter()
+
+  const error = computed(() => authStore.error)
+  const isLoading = computed(() => authStore.isLoading)
+
+  const handleRegister = async () => {
+    authStore.error = null
+
+    if (!formEmail.value || !formPassword.value || !formConfirmPassword.value) {
+      authStore.error = 'Please complete all fields.'
+      return
+    }
+
+    if (formPassword.value !== formConfirmPassword.value) {
+      authStore.error = 'Passwords do not match.'
+      return
+    }
+
+    const didRegister = await authStore.register(formEmail.value, formPassword.value)
+
+    if (didRegister) {
+      await router.push('/tareas')
+    }
+  }
+
+  return {
+    handleRegister,
+    error,
+    isLoading,
+  }
+}
+
+const { handleRegister, error, isLoading } = useAuth(email, password, confirmPassword)
+
+>>>>>>> 2eb0319ed62987c4c2c666e6dc1c74cbff46c6ea
 onMounted(() => {
   emailInputRef.value?.$el?.querySelector('input')?.focus()
 })

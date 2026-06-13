@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+
 import { fetchProfile, getSession, onAuthStateChange, signIn, signOut, signUp } from '@/services/auth.service'
 
 const normalizeError = (error) => {
