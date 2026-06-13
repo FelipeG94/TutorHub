@@ -4,59 +4,60 @@
       <input
         v-model="filterUser"
         type="text"
-        placeholder="Search by email..."
+        placeholder="Buscar por usuario..."
         class="filter-input"
       />
       <select v-model="filterStatus" class="filter-select">
-        <option value="">All Status</option>
-        <option value="pending">Pending</option>
-        <option value="in-progress">In Progress</option>
-        <option value="completed">Completed</option>
+        <option value="">Todos los estados</option>
+        <option value="pendiente">Pendiente</option>
+        <option value="completada">Completada</option>
       </select>
     </div>
 
     <table class="tasks-table">
       <thead>
         <tr>
-          <th>Title</th>
-          <th>Description</th>
-          <th>Category</th>
-          <th>Status</th>
-          <th>User</th>
-          <th>Date</th>
-          <th>Actions</th>
+          <th>Título</th>
+          <th>Descripción</th>
+          <th>Categoría</th>
+          <th>Estado</th>
+          <th>Usuario</th>
+          <th>Fecha</th>
+          <th>Acciones</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="task in paginatedTasks" :key="task.id">
           <td>{{ task.title }}</td>
-          <td>{{ task.description }}</td>
-          <td>{{ task.category }}</td>
-          <td><AppBadge :status="task.status" /></td>
-          <td>{{ task.user.email }}</td>
-          <td>{{ formatDate(task.date) }}</td>
+          <td>{{ task.description || 'Sin descripción' }}</td>
+          <td>{{ task.category || task.category_id || 'Sin categoría' }}</td>
           <td>
-            <button @click="deleteTask(task.id)" class="btn-delete">Delete</button>
+            <AppBadge :text="statusLabel(task.status)" :variant="statusVariant(task.status)" />
+          </td>
+          <td>{{ task.user?.email ?? task.user_id ?? 'desconocido' }}</td>
+          <td>{{ formatDate(task.created_at || task.date) }}</td>
+          <td>
+            <button @click="deleteTask(task.id)" class="btn-delete">Eliminar</button>
           </td>
         </tr>
       </tbody>
     </table>
 
-    <div v-if="tasksFiltered.length > 10" class="pagination">
+    <div v-if="tasksFiltered.length > itemsPerPage" class="pagination">
       <button
         @click="previousPage"
         :disabled="currentPage === 0"
         class="btn-pagination"
       >
-        Previous
+        Anterior
       </button>
-      <span class="page-info">Page {{ currentPage + 1 }} of {{ totalPages }}</span>
+      <span class="page-info">Página {{ currentPage + 1 }} de {{ totalPages }}</span>
       <button
         @click="nextPage"
         :disabled="currentPage === totalPages - 1"
         class="btn-pagination"
       >
-        Next
+        Siguiente
       </button>
     </div>
   </div>
@@ -69,8 +70,8 @@ import AppBadge from '@/components/common/AppBadge.vue'
 const props = defineProps({
   tasks: {
     type: Array,
-    required: true
-  }
+    required: true,
+  },
 })
 
 const emit = defineEmits(['delete-task'])
@@ -78,24 +79,22 @@ const emit = defineEmits(['delete-task'])
 const filterUser = ref('')
 const filterStatus = ref('')
 const currentPage = ref(0)
+const itemsPerPage = 10
 
 const tasksFiltered = computed(() => {
-  return props.tasks.filter(task => {
-    const matchesUser = task.user.email
-      .toLowerCase()
-      .includes(filterUser.value.toLowerCase())
+  return props.tasks.filter((task) => {
+    const userLabel = (task.user?.email || task.user_id || '').toLowerCase()
+    const matchesUser = userLabel.includes(filterUser.value.toLowerCase())
     const matchesStatus = filterStatus.value === '' || task.status === filterStatus.value
     return matchesUser && matchesStatus
   })
 })
 
-const itemsPerPage = 10
-const totalPages = computed(() => Math.ceil(tasksFiltered.value.length / itemsPerPage))
+const totalPages = computed(() => Math.max(1, Math.ceil(tasksFiltered.value.length / itemsPerPage)))
 
 const paginatedTasks = computed(() => {
   const start = currentPage.value * itemsPerPage
-  const end = start + itemsPerPage
-  return tasksFiltered.value.slice(start, end)
+  return tasksFiltered.value.slice(start, start + itemsPerPage)
 })
 
 const nextPage = () => {
@@ -116,6 +115,15 @@ const deleteTask = (id) => {
 
 const formatDate = (date) => {
   return new Date(date).toLocaleDateString()
+}
+
+const statusLabel = (status) => {
+  if (status === 'completada') return 'Completada'
+  return 'Pendiente'
+}
+
+const statusVariant = (status) => {
+  return status === 'completada' ? 'success' : 'warning'
 }
 </script>
 
