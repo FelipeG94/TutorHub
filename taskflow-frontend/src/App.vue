@@ -1,7 +1,7 @@
 <script setup>
 import { computed, onMounted } from 'vue'
 import AppNavbar from './components/common/AppNavbar.vue'
-import { useAuthStore } from './stores/auth'
+import { useAuthStore } from './stores/auth.store'
 
 const authStore = useAuthStore()
 
