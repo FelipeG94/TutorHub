@@ -21,8 +21,13 @@ const menuOpen = ref(false)
 const userEmail = computed(() => props.user?.email ?? '')
 
 const navigationLinks = computed(() => [
-  { label: 'Mis Tareas', path: '/tasks' },
-  ...(props.isAdmin ? [{ label: 'Admin', path: '/admin' }] : []),
+  { label: 'Mis Tareas', path: '/tareas' },
+  ...(props.isAdmin
+    ? [
+        { label: 'Admin', path: '/admin' },
+        { label: 'Categorías', path: '/admin/categorias' },
+      ]
+    : []),
 ])
 
 const isActive = (path) => route.path === path || route.path.startsWith(`${path}/`)
