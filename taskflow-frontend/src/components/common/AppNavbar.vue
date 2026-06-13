@@ -48,7 +48,7 @@ const handleLogout = () => {
 
 <template>
   <nav class="app-navbar">
-    <RouterLink to="/tasks" class="app-navbar__brand" @click="closeMenu">
+    <RouterLink to="/tareas" class="app-navbar__brand" @click="closeMenu">
       <span class="app-navbar__brand-mark">TF</span>
       <span class="app-navbar__brand-text">
         <strong>TaskFlow</strong>

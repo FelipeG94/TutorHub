@@ -47,7 +47,7 @@ const handleDeleteCancel = () => {
 
     <header class="categories-header">
 
-      <h1>Categories Management</h1>
+      <h1>Gestión de categorías</h1>
 
     </header>
 
@@ -61,7 +61,7 @@ const handleDeleteCancel = () => {
 
           v-model="newCategoryName"
 
-          placeholder="Enter new category name..."
+          placeholder="Nombre de categoría..."
 
           class="add-input"
 
@@ -69,7 +69,7 @@ const handleDeleteCancel = () => {
 
         <AppButton @click="handleCreate" class="add-btn">
 
-          Add
+          Agregar
 
         </AppButton>
 
@@ -81,7 +81,7 @@ const handleDeleteCancel = () => {
 
     <section class="categories-list-section">
 
-      <h2>Existing Categories</h2>
+      <h2>Categorías existentes</h2>
 
       <div class="categories-list">
 
