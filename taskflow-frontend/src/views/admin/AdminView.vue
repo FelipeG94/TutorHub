@@ -51,8 +51,8 @@ const userProgress = computed(() => {
 <template>
   <main class="admin-view">
     <header class="admin-header">
-      <h1>Administration Panel</h1>
-      <p>Global system statistics and management</p>
+      <h1>Panel de administración</h1>
+      <p>Estadísticas globales y gestión del sistema</p>
     </header>
 
     <section class="stats-section">
@@ -99,7 +99,7 @@ const userProgress = computed(() => {
     </section>
 
     <section class="tasks-section">
-      <h2>All Tasks</h2>
+      <h2>Todas las tareas</h2>
       <TasksTable
         :tasks="taskStore.allTasks"
         @delete-task="taskStore.deleteTask"

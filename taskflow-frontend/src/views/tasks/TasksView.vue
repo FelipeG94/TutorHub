@@ -25,7 +25,8 @@ const currentUserId = computed(() => authStore.user?.id)
 const filteredTasks = computed(() => {
   return taskStore.tasks.filter((task) => {
     const matchesStatus = statusFilter.value === '' || task.status === statusFilter.value
-    const matchesCategory = categoryFilter.value === '' || task.category_id === categoryFilter.value
+    const matchesCategory =
+      categoryFilter.value === '' || String(task.category_id) === String(categoryFilter.value)
     return matchesStatus && matchesCategory
   })
 })
