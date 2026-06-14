@@ -15,6 +15,9 @@ const authStore = useAuthStore()
 const taskStore = useTaskStore()
 const categoryStore = useCategoryStore()
 
+const taskError = computed(() => taskStore.error)
+const categoryError = computed(() => categoryStore.error)
+
 const isModalOpen = ref(false)
 const selectedTask = ref(null)
 const statusFilter = ref('')
@@ -98,6 +101,10 @@ onMounted(loadData)
       </div>
     </header>
 
+    <div v-if="taskError || categoryError" class="view-alert" role="alert">
+      {{ taskError || categoryError }}
+    </div>
+
     <TaskFilters
       :categories="categoryStore.categories"
       :status="statusFilter"
@@ -161,5 +168,14 @@ onMounted(loadData)
 .page-shell p {
   margin: 0.5rem 0 0;
   color: #475569;
+}
+
+.view-alert {
+  margin: 1rem 0;
+  padding: 1rem 1.25rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(220, 38, 38, 0.25);
+  background: rgba(254, 226, 226, 0.75);
+  color: #991b1b;
 }
 </style>

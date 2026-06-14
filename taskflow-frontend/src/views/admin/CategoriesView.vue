@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useCategoryStore } from '@/stores/categoryStore'
 import { useCategories } from '@/composables/useCategories'
 import AppInput from '@/components/common/AppInput.vue'
@@ -15,7 +15,8 @@ const {
   startEdit,
   confirmEdit,
   cancelEdit,
-  handleDelete
+  handleDelete,
+  error
 } = useCategories()
 
 const confirmingDeleteId = ref(null)
@@ -52,6 +53,10 @@ const handleDeleteCancel = () => {
     </header>
 
 
+
+    <div v-if="error" class="view-alert" role="alert">
+      {{ error }}
+    </div>
 
     <section class="add-category-section">
 
@@ -469,6 +474,15 @@ const handleDeleteCancel = () => {
 
   color: #991b1b;
 
+}
+
+.view-alert {
+  margin: 1rem 0;
+  padding: 1rem 1.25rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(220, 38, 38, 0.25);
+  background: rgba(254, 226, 226, 0.75);
+  color: #991b1b;
 }
 
 </style>
