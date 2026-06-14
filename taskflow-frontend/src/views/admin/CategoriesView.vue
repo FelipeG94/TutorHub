@@ -148,7 +148,7 @@ const handleDeleteCancel = () => {
 
               >
 
-                Cancel
+                  Cancelar
 
               </button>
 
@@ -165,8 +165,6 @@ const handleDeleteCancel = () => {
   </main>
 
 </template>
-
-
 
 <style scoped>
 

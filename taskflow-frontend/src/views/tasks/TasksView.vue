@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useTaskStore } from '@/stores/taskStore'
 import { useCategoryStore } from '@/stores/categoryStore'
@@ -40,6 +40,15 @@ const loadData = async () => {
   await categoryStore.fetchCategories()
   await taskStore.fetchTasks(currentUserId.value)
 }
+
+watch(
+  () => currentUserId.value,
+  async (userId) => {
+    if (userId) {
+      await loadData()
+    }
+  }
+)
 
 const openModal = (task = null) => {
   selectedTask.value = task
