@@ -2,7 +2,7 @@
 import { onMounted, computed } from 'vue'
 import { useTaskStore } from '@/stores/taskStore'
 import { useCategoryStore } from '@/stores/categoryStore'
-import { useAuthStore } from '@/stores/authStore'
+import { useAuthStore } from '@/stores/auth.store'
 import StatsCard from '@/components/common/admin/StatsCard.vue'
 import UserProgressBar from '@/components/common/admin/UserProgressBar.vue'
 import TasksTable from '@/components/common/admin/TasksTable.vue'
@@ -17,26 +17,33 @@ onMounted(async () => {
 })
 
 const totalTasks = computed(() => taskStore.allTasks.length)
-const completed = computed(() => taskStore.allTasks.filter(t => t.status === 'completada').length)
+const completed = computed(() => taskStore.allTasks.filter((t) => t.status === 'completada').length)
 const pending = computed(() => totalTasks.value - completed.value)
 const totalCategories = computed(() => categoryStore.categories.length)
 
 const userProgress = computed(() => {
   const grouped = {}
-  taskStore.allTasks.forEach(task => {
-    if (!grouped[task.user_id]) {
-      grouped[task.user_id] = {
-        user_id: task.user_id,
-        email: task.user.email,
+
+  taskStore.allTasks.forEach((task) => {
+    const userKey = task.user_id || 'desconocido'
+    const userEmail = task.user?.email ?? task.user_id ?? 'desconocido'
+
+    if (!grouped[userKey]) {
+      grouped[userKey] = {
+        user_id: userKey,
+        email: userEmail,
         total: 0,
-        completed: 0
+        completed: 0,
       }
     }
-    grouped[task.user_id].total++
+
+    grouped[userKey].total++
+
     if (task.status === 'completada') {
-      grouped[task.user_id].completed++
+      grouped[userKey].completed++
     }
   })
+
   return Object.values(grouped)
 })
 </script>
@@ -44,8 +51,8 @@ const userProgress = computed(() => {
 <template>
   <main class="admin-view">
     <header class="admin-header">
-      <h1>Administration Panel</h1>
-      <p>Global system statistics and management</p>
+      <h1>Panel de administración</h1>
+      <p>Estadísticas globales y gestión del sistema</p>
     </header>
 
     <section class="stats-section">
@@ -92,7 +99,7 @@ const userProgress = computed(() => {
     </section>
 
     <section class="tasks-section">
-      <h2>All Tasks</h2>
+      <h2>Todas las tareas</h2>
       <TasksTable
         :tasks="taskStore.allTasks"
         @delete-task="taskStore.deleteTask"

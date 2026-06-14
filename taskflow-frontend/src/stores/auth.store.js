@@ -1,171 +1,6 @@
 import { defineStore } from 'pinia'
 
-const STORAGE_KEYS = {
-	users: 'taskflow.auth.users',
-	session: 'taskflow.auth.session',
-}
-
-const authListeners = new Set()
-let storageListenerInstalled = false
-
-const safeRead = (key, fallback) => {
-	if (typeof window === 'undefined') {
-		return fallback
-	}
-
-	try {
-		const rawValue = window.localStorage.getItem(key)
-		return rawValue ? JSON.parse(rawValue) : fallback
-	} catch {
-		return fallback
-	}
-}
-
-const safeWrite = (key, value) => {
-	if (typeof window === 'undefined') {
-		return
-	}
-
-	window.localStorage.setItem(key, JSON.stringify(value))
-}
-
-const safeRemove = (key) => {
-	if (typeof window === 'undefined') {
-		return
-	}
-
-	window.localStorage.removeItem(key)
-}
-
-const cloneUser = (user) => (user ? { id: user.id, email: user.email, role: user.role } : null)
-
-const getStoredUsers = () => safeRead(STORAGE_KEYS.users, [])
-const setStoredUsers = (users) => safeWrite(STORAGE_KEYS.users, users)
-const getStoredSession = () => safeRead(STORAGE_KEYS.session, null)
-const setStoredSession = (user) => safeWrite(STORAGE_KEYS.session, user)
-const clearStoredSession = () => safeRemove(STORAGE_KEYS.session)
-
-const emitAuthStateChange = (sessionUser) => {
-	for (const listener of authListeners) {
-		listener('TOKEN_CHANGED', sessionUser ? { user: cloneUser(sessionUser) } : null)
-	}
-}
-
-const authService = {
-	async getSession() {
-		const sessionUser = getStoredSession()
-
-		return {
-			data: {
-				session: sessionUser ? { user: cloneUser(sessionUser) } : null,
-			},
-			error: null,
-		}
-	},
-
-	async signIn(email, password) {
-		const users = getStoredUsers()
-		const user = users.find((entry) => entry.email === email && entry.password === password)
-
-		if (!user) {
-			return {
-				data: { user: null },
-				error: { message: 'Invalid email or password.' },
-			}
-		}
-
-		const sessionUser = cloneUser(user)
-		setStoredSession(sessionUser)
-		emitAuthStateChange(sessionUser)
-
-		return {
-			data: { user: sessionUser },
-			error: null,
-		}
-	},
-
-	async signUp(email, password) {
-		const users = getStoredUsers()
-		const existingUser = users.find((entry) => entry.email === email)
-
-		if (existingUser) {
-			return {
-				data: { user: null },
-				error: { message: 'An account with this email already exists.' },
-			}
-		}
-
-		const sessionUser = {
-			id: crypto.randomUUID(),
-			email,
-			password,
-			role: 'lector',
-		}
-
-		setStoredUsers([...users, sessionUser])
-		setStoredSession(sessionUser)
-		emitAuthStateChange(sessionUser)
-
-		return {
-			data: { user: cloneUser(sessionUser) },
-			error: null,
-		}
-	},
-
-	async signOut() {
-		clearStoredSession()
-		emitAuthStateChange(null)
-
-		return {
-			error: null,
-		}
-	},
-
-	async fetchProfile(userId) {
-		const users = getStoredUsers()
-		const user = users.find((entry) => entry.id === userId)
-
-		if (!user) {
-			return {
-				data: { profile: null },
-				error: { message: 'Profile not found.' },
-			}
-		}
-
-		return {
-			data: {
-				profile: {
-					role: user.role,
-				},
-			},
-			error: null,
-		}
-	},
-
-	onAuthStateChange(callback) {
-		authListeners.add(callback)
-
-		if (!storageListenerInstalled && typeof window !== 'undefined') {
-			storageListenerInstalled = true
-			window.addEventListener('storage', (event) => {
-				if (event.key === STORAGE_KEYS.session) {
-					const sessionUser = getStoredSession()
-					emitAuthStateChange(sessionUser)
-				}
-			})
-		}
-
-		return {
-			data: {
-				subscription: {
-					unsubscribe() {
-						authListeners.delete(callback)
-					},
-				},
-			},
-		}
-	},
-}
+import { fetchProfile, getSession, onAuthStateChange, signIn, signOut, signUp } from '@/services/auth.service'
 
 const normalizeError = (error) => {
 	if (!error) {
@@ -193,7 +28,7 @@ export const useAuthStore = defineStore('auth', {
 
 	actions: {
 		async checkSession() {
-			const { data, error } = await authService.getSession()
+			const { data, error } = await getSession()
 
 			if (error) {
 				this.error = normalizeError(error)
@@ -205,7 +40,7 @@ export const useAuthStore = defineStore('auth', {
 			if (!sessionUser) {
 				this.user = null
 				if (!this._authStateSubscription) {
-					this._authStateSubscription = authService.onAuthStateChange(async (_event, session) => {
+					this._authStateSubscription = onAuthStateChange(async (_event, session) => {
 						const nextUser = session?.user ?? null
 
 						if (!nextUser) {
@@ -224,7 +59,7 @@ export const useAuthStore = defineStore('auth', {
 			this.user = cloneUser(sessionUser)
 
 			if (!this._authStateSubscription) {
-				this._authStateSubscription = authService.onAuthStateChange(async (_event, session) => {
+				this._authStateSubscription = onAuthStateChange(async (_event, session) => {
 					const nextUser = session?.user ?? null
 
 					if (!nextUser) {
@@ -247,7 +82,7 @@ export const useAuthStore = defineStore('auth', {
 			this.error = null
 
 			try {
-				const { data, error } = await authService.signIn(email, pass)
+				const { data, error } = await signIn(email, pass)
 
 				if (error) {
 					this.error = normalizeError(error)
@@ -270,7 +105,7 @@ export const useAuthStore = defineStore('auth', {
 			this.error = null
 
 			try {
-				const { data, error } = await authService.signUp(email, pass)
+				const { data, error } = await signUp(email, pass)
 
 				if (error) {
 					this.error = normalizeError(error)
@@ -291,13 +126,13 @@ export const useAuthStore = defineStore('auth', {
 		},
 
 		async logout() {
-			await authService.signOut()
+			await signOut()
 			this.user = null
 			this.error = null
 		},
 
 		async fetchProfile(userId) {
-			const { data, error } = await authService.fetchProfile(userId)
+			const { data, error } = await fetchProfile(userId)
 
 			if (error) {
 				this.error = normalizeError(error)

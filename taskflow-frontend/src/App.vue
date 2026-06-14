@@ -1,8 +1,10 @@
 <script setup>
 import { computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import AppNavbar from './components/common/AppNavbar.vue'
 import { useAuthStore } from './stores/auth.store'
 
+const router = useRouter()
 const authStore = useAuthStore()
 
 onMounted(() => {
@@ -14,13 +16,14 @@ const isAdmin = computed(() => authStore.isAdmin)
 
 const handleLogout = async () => {
   await authStore.logout()
+  await router.push('/login')
 }
 </script>
 
 <template>
   <AppNavbar
     v-if="isAuthenticated"
-    :is-authenticated="isAuthenticated"
+    :user="authStore.user"
     :is-admin="isAdmin"
     @logout="handleLogout"
   />

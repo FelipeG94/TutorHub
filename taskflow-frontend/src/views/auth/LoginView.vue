@@ -1,42 +1,10 @@
 <script setup>
-import { computed, onMounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { useAuthStore } from '@/stores/auth.store'
+import { onMounted, ref } from 'vue'
+import { useAuth } from '@/composables/useAuth'
 
-const email = ref('')
-const password = ref('')
+const { email, password, isLoading, error, handleLogin } = useAuth()
 const emailInputRef = ref(null)
 
-function useAuth(formEmail, formPassword) {
-  const authStore = useAuthStore()
-  const router = useRouter()
-
-  const error = computed(() => authStore.error)
-  const isLoading = computed(() => authStore.isLoading)
-
-  const handleLogin = async () => {
-    authStore.error = null
-
-    if (!formEmail.value || !formPassword.value) {
-      authStore.error = 'Please enter both email and password.'
-      return
-    }
-
-    const didLogin = await authStore.login(formEmail.value, formPassword.value)
-
-    if (didLogin) {
-      await router.push('/tareas')
-    }
-  }
-
-  return {
-    handleLogin,
-    error,
-    isLoading,
-  }
-}
-
-const { handleLogin, error, isLoading } = useAuth(email, password)
 
 onMounted(() => {
   emailInputRef.value?.$el?.querySelector('input')?.focus()
