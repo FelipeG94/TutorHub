@@ -1,6 +1,8 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { useAuth } from '@/composables/useAuth'
+import AppButton from '@/components/common/AppButton.vue'
+import AppInput from '@/components/common/AppInput.vue'
 
 const { email, password, confirmPassword, isLoading, error, handleRegister } = useAuth()
 const emailInputRef = ref(null)

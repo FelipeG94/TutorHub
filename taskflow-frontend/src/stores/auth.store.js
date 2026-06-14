@@ -14,6 +14,18 @@ const normalizeError = (error) => {
 	return error.message ?? 'Something went wrong.'
 }
 
+const cloneUser = (user) => {
+	if (!user) {
+		return null
+	}
+
+	return {
+		id: user.id,
+		email: user.email,
+		role: user.role,
+	}
+}
+
 export const useAuthStore = defineStore('auth', {
 	state: () => ({
 		user: null,
