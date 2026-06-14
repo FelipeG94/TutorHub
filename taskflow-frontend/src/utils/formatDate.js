@@ -1,9 +1,4 @@
-/**
- * Formats an ISO date string to Spanish readable format
- * Example: '2025-01-15T10:30:00Z' -> '15 ene 2025'
- * @param {string} isoString - ISO date string
- * @returns {string} Formatted date
- */
+
 export function formatDate(isoString) {
   const date = new Date(isoString);
   const formatter = new Intl.DateTimeFormat('es-AR', {
@@ -14,12 +9,7 @@ export function formatDate(isoString) {
   return formatter.format(date);
 }
 
-/**
- * Formats an ISO date string to relative time format
- * Example: '2025-01-15T10:30:00Z' -> 'hace 5 minutos'
- * @param {string} isoString - ISO date string
- * @returns {string} Relative time text
- */
+
 export function formatRelative(isoString) {
   const dateTime = new Date(isoString).getTime();
   const now = Date.now();
@@ -42,12 +32,7 @@ export function formatRelative(isoString) {
   }
 }
 
-/**
- * Formats an ISO date string to full date and time format
- * Example: '2025-01-15T10:30:00Z' -> '15 ene 2025, 10:30 hs'
- * @param {string} isoString - ISO date string
- * @returns {string} Formatted date and time
- */
+
 export function formatDateTime(isoString) {
   const date = new Date(isoString);
   const dateFormatter = new Intl.DateTimeFormat('es-AR', {
