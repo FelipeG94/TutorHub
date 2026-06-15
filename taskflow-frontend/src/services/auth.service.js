@@ -37,21 +37,6 @@ export const signUp = async (email, password) => {
 		}
 	}
 
-	const profileResult = await supabase.from('profiles').insert({
-		id: user.id,
-		role: 'lector',
-	})
-
-	if (profileResult.error) {
-		return {
-			data: {
-				user,
-				session: signUpResult.data?.session ?? null,
-			},
-			error: profileResult.error,
-		}
-	}
-
 	return {
 		data: {
 			user,
