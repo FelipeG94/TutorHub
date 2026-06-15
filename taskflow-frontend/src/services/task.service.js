@@ -41,13 +41,28 @@ export async function getAllTasks(filters = {}) {
   return data || []
 }
 
-export async function createTask({ title, description, categoryId, userId }) {
+export async function createTask(payload) {
+  const title = payload?.title ?? ''
+  const description = payload?.description ?? ''
+  const categoryId = payload?.categoryId ?? payload?.category_id ?? null
+  const userId = payload?.userId ?? payload?.user_id ?? null
+
+  if (!userId) {
+    throw new Error('Missing userId when creating a task.')
+  }
+
+   const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+
+
   const { data, error } = await supabase
     .from('tasks')
     .insert([
       {
         title: title.trim(),
-        description: description?.trim() || '',
+        description: description.trim(),
         category_id: categoryId || null,
         user_id: userId,
         status: 'pendiente',
@@ -64,7 +79,9 @@ export async function updateTask(id, updates) {
   const sanitized = {
     ...(updates.title !== undefined ? { title: updates.title.trim() } : {}),
     ...(updates.description !== undefined ? { description: updates.description.trim() } : {}),
-    ...(updates.categoryId !== undefined ? { category_id: updates.categoryId || null } : {}),
+    ...((updates.categoryId !== undefined || updates.category_id !== undefined)
+      ? { category_id: (updates.categoryId ?? updates.category_id) || null }
+      : {}),
     ...(updates.status !== undefined ? { status: updates.status } : {}),
   }
 
