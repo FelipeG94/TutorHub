@@ -101,9 +101,10 @@ const handleLogout = () => {
   align-items: center;
   gap: 1rem;
   padding: 1rem 1.25rem;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.94);
   backdrop-filter: blur(18px);
-  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.22);
+  box-shadow: 0 8px 30px rgba(15, 23, 42, 0.04);
 }
 
 .app-navbar__brand {
@@ -122,7 +123,7 @@ const handleLogout = () => {
   border-radius: 0.85rem;
   display: grid;
   place-items: center;
-  background: linear-gradient(135deg, #0f172a, #334155);
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
   color: #fff;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -150,7 +151,7 @@ const handleLogout = () => {
   margin-left: auto;
   border: 0;
   border-radius: 0.9rem;
-  background: #f1f5f9;
+  background: #eff6ff;
   cursor: pointer;
 }
 
@@ -160,7 +161,7 @@ const handleLogout = () => {
   height: 2px;
   margin: 0.22rem auto;
   border-radius: 999px;
-  background: #0f172a;
+  background: #1e293b;
 }
 
 .app-navbar__shell {
@@ -192,12 +193,12 @@ const handleLogout = () => {
 }
 
 .app-navbar__link:hover {
-  background: #e2e8f0;
+  background: #eaf2ff;
   color: #0f172a;
 }
 
 .app-navbar__link.active {
-  background: #0f172a;
+  background: #2563eb;
   color: #ffffff;
 }
 
@@ -221,7 +222,7 @@ const handleLogout = () => {
   border: 0;
   border-radius: 999px;
   padding: 0.72rem 1rem;
-  background: #111827;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
   color: #ffffff;
   font: inherit;
   font-weight: 600;

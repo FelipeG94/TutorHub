@@ -67,10 +67,20 @@ const handleChange = (event) => {
 	border-radius: 0.9rem;
 	background: #ffffff;
 	color: #0f172a;
+	color-scheme: light;
 	font: inherit;
 	transition:
 		border-color 0.18s ease,
 		box-shadow 0.18s ease;
+}
+
+.app-select__field option {
+	background: #ffffff;
+	color: #0f172a;
+}
+
+.app-select__field option:disabled {
+	color: #94a3b8;
 }
 
 .app-select__field:focus {

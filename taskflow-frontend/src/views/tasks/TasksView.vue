@@ -106,7 +106,7 @@ onMounted(loadData)
 
       <div class="page-actions">
         <AppButton @click="navigateToNewTask" variant="secondary">Nueva tarea completa</AppButton>
-        <AppButton @click="openModal">Crear tarea rápida</AppButton>
+        <AppButton @click="openModal()">Crear tarea rápida</AppButton>
       </div>
     </header>
 

@@ -100,18 +100,19 @@ onBeforeUnmount(() => {
   display: grid;
   place-items: center;
   padding: 1.25rem;
-  background: rgba(15, 23, 42, 0.58);
+  background: rgba(15, 23, 42, 0.28);
 }
 
 .modal-dialog {
   width: min(100%, 42rem);
   max-height: calc(100vh - 2.5rem);
   overflow: auto;
-  border-radius: 1rem;
-  background: #ffffff;
+  border-radius: 1.25rem;
+  background: rgba(255, 255, 255, 0.98);
+  border: 1px solid rgba(148, 163, 184, 0.18);
   box-shadow:
-    rgba(15, 23, 42, 0.2) 0 18px 50px -10px,
-    rgba(15, 23, 42, 0.1) 0 8px 24px -12px;
+    rgba(15, 23, 42, 0.16) 0 18px 50px -10px,
+    rgba(15, 23, 42, 0.08) 0 8px 24px -12px;
 }
 
 .modal-header {
@@ -120,7 +121,7 @@ onBeforeUnmount(() => {
   justify-content: space-between;
   gap: 1rem;
   padding: 1.25rem 1.25rem 0.75rem;
-  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.18);
 }
 
 .modal-title {
@@ -136,7 +137,7 @@ onBeforeUnmount(() => {
   height: 2.25rem;
   border: 0;
   border-radius: 999px;
-  background: #f1f5f9;
+  background: #eff6ff;
   color: #0f172a;
   font-size: 1.5rem;
   line-height: 1;
