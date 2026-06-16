@@ -26,7 +26,7 @@ const userProgress = computed(() => {
 
   taskStore.allTasks.forEach((task) => {
     const userKey = task.user_id || 'desconocido'
-    const userEmail = task.user?.email ?? task.user_id ?? 'desconocido'
+    const userEmail = task.user?.email ?? task.user?.role ?? task.user_id ?? 'desconocido'
 
     if (!grouped[userKey]) {
       grouped[userKey] = {

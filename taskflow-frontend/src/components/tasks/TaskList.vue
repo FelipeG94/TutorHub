@@ -48,7 +48,7 @@ const taskCount = computed(() => props.tasks.length)
         v-for="task in props.tasks"
         :key="task.id"
         :task="task"
-        :categoryName="categoryMap[task.category_id]"
+        :categoryName="task.category?.name || categoryMap[task.category_id]"
         @toggle="$emit('toggle', $event)"
         @edit="$emit('edit', $event)"
         @delete="$emit('delete', $event)"

@@ -37,7 +37,7 @@ const isCompleted = props.task.status === 'completada'
     <div class="task-card__footer">
       <div class="task-card__info">
         <small>Creada: {{ new Date(task.created_at).toLocaleDateString() }}</small>
-        <small>Usuario: {{ task.user?.email ?? task.user_id ?? 'desconocido' }}</small>
+        <small>Usuario: {{ task.user?.email ?? task.user?.role ?? task.user_id ?? 'desconocido' }}</small>
       </div>
 
       <div class="task-card__actions">

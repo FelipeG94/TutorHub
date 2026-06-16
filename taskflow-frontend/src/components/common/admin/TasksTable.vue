@@ -30,11 +30,11 @@
         <tr v-for="task in paginatedTasks" :key="task.id">
           <td>{{ task.title }}</td>
           <td>{{ task.description || 'Sin descripción' }}</td>
-          <td>{{ task.category || task.category_id || 'Sin categoría' }}</td>
+          <td>{{ task.category?.name || task.category || task.category_id || 'Sin categoría' }}</td>
           <td>
             <AppBadge :text="statusLabel(task.status)" :variant="statusVariant(task.status)" />
           </td>
-          <td>{{ task.user?.email ?? task.user_id ?? 'desconocido' }}</td>
+          <td>{{ task.user?.email ?? task.user?.role ?? task.user_id ?? 'desconocido' }}</td>
           <td>{{ formatDate(task.created_at || task.date) }}</td>
           <td>
             <button @click="deleteTask(task.id)" class="btn-delete">Eliminar</button>
@@ -83,7 +83,7 @@ const itemsPerPage = 10
 
 const tasksFiltered = computed(() => {
   return props.tasks.filter((task) => {
-    const userLabel = (task.user?.email || task.user_id || '').toLowerCase()
+    const userLabel = (task.user?.email || task.user?.role || task.user_id || '').toLowerCase()
     const matchesUser = userLabel.includes(filterUser.value.toLowerCase())
     const matchesStatus = filterStatus.value === '' || task.status === filterStatus.value
     return matchesUser && matchesStatus
