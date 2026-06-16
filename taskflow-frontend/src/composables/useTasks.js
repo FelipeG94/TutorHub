@@ -38,7 +38,7 @@ export const useTasks = () => {
       newCategoryId.value = null
       return created
     } catch (err) {
-      console.error('Error creating task:', err)
+      console.error('Error creando tarea:', err)
       throw err
     }
   }
@@ -65,7 +65,7 @@ export const useTasks = () => {
       editingPayload.value = { title: '', description: '', categoryId: null }
       return updated
     } catch (err) {
-      console.error('Error updating task:', err)
+      console.error('Error actualizando tarea:', err)
       throw err
     }
   }
@@ -79,7 +79,7 @@ export const useTasks = () => {
     try {
       await taskStore.deleteTask(id)
     } catch (err) {
-      console.error('Error deleting task:', err)
+      console.error('Error borrando tarea:', err)
       throw err
     }
   }

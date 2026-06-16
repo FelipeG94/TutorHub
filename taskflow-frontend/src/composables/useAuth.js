@@ -26,7 +26,7 @@ export function useAuth() {
 		clearError()
 
 		if (!email.value.trim() || !password.value.trim()) {
-			setError('Please enter both email and password.')
+			setError('Ingresa ambos campos de email y contraseña.')
 			return false
 		}
 
@@ -54,17 +54,17 @@ export function useAuth() {
 		clearError()
 
 		if (!email.value.trim() || !password.value.trim() || !confirmPassword.value.trim()) {
-			setError('Please complete all fields.')
+			setError('Por favor, completa todos los campos.')
 			return false
 		}
 
 		if (password.value.length < 8) {
-			setError('Password must contain at least 8 characters.')
+			setError('La contraseña debe contener al menos 8 caracteres.')
 			return false
 		}
 
 		if (password.value !== confirmPassword.value) {
-			setError('Passwords do not match.')
+			setError('Las contraseñas no coinciden.')
 			return false
 		}
 

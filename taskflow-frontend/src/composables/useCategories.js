@@ -20,7 +20,7 @@ export const useCategories = () => {
       await categoryStore.createCategory(newCategoryName.value)
       newCategoryName.value = ''
     } catch (err) {
-      console.error('Error creating category:', err)
+      console.error('Error creando categoria:', err)
     }
   }
 
@@ -38,7 +38,7 @@ export const useCategories = () => {
       editingId.value = null
       editingName.value = ''
     } catch (err) {
-      console.error('Error updating category:', err)
+      console.error('Error actualizando categoria:', err)
     }
   }
 
@@ -51,7 +51,7 @@ export const useCategories = () => {
     try {
       await categoryStore.deleteCategory(id)
     } catch (err) {
-      console.error('Error deleting category:', err)
+      console.error('Error borrando categoria:', err)
     }
   }
 
