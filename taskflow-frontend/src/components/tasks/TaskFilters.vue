@@ -81,52 +81,105 @@ const clearFilters = () => {
 
 <style scoped>
 .task-filters {
-  display: flex;
-  flex-wrap: wrap;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr auto;
   gap: 1rem;
   align-items: flex-end;
-  justify-content: space-between;
   background: #ffffff;
-  border: 1px solid #e2e8f0;
+  border: 1px solid rgba(217, 225, 237, 0.6);
   border-radius: 1rem;
-  padding: 1rem;
+  padding: 1.25rem;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.08);
 }
 
 .task-filters__controls {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 1rem;
-  flex: 1 1 auto;
 }
 
 .task-filters__field {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  min-width: 12rem;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   color: #0f172a;
 }
 
-.task-filters__field select {
-  padding: 0.85rem 1rem;
-  border: 1px solid #cbd5e1;
-  border-radius: 0.9rem;
-  background: #f8fafc;
-  font: inherit;
-}
-
-.task-filters__clear {
-  border: 1px solid #cbd5e1;
-  background: #fff;
-  color: #475569;
-  padding: 0.85rem 1rem;
-  border-radius: 0.85rem;
-  cursor: pointer;
+.task-filters__field span {
   font-weight: 600;
 }
 
+.task-filters__field select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid rgba(217, 225, 237, 0.7);
+  border-radius: 0.75rem;
+  background: #f5f7fc;
+  font: inherit;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.task-filters__field select:hover,
+.task-filters__field select:focus {
+  border-color: #3b82f6;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.task-filters__clear {
+  height: fit-content;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  background: #eff6ff;
+  color: #1e40af;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
 .task-filters__clear:hover {
-  background: #f1f5f9;
+  background: #dbeafe;
+  border-color: #3b82f6;
+  color: #1e3a8a;
+}
+
+@media (max-width: 768px) {
+  .task-filters {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .task-filters__controls {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .task-filters__clear {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .task-filters {
+    padding: 1rem;
+  }
+
+  .task-filters__controls {
+    grid-template-columns: 1fr;
+  }
+
+  .task-filters__field {
+    font-size: 0.85rem;
+  }
+
+  .task-filters__clear {
+    padding: 0.65rem 1rem;
+    font-size: 0.85rem;
+  }
 }
 </style>

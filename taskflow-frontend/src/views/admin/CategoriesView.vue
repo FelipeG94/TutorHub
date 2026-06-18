@@ -176,11 +176,25 @@ const handleDeleteCancel = () => {
 
   gap: 32px;
 
-  padding: 24px;
+  padding: 24px 16px;
 
-  max-width: 800px;
+  width: 100%;
+
+  max-width: 100%;
 
   margin: 0 auto;
+
+}
+
+@media (min-width: 1024px) {
+
+  .categories-view {
+
+    padding: 32px;
+
+    max-width: 1240px;
+
+  }
 
 }
 
@@ -292,11 +306,12 @@ const handleDeleteCancel = () => {
 
   padding: 12px 16px;
 
-  border: 1px solid #e5e7eb;
+  border: 1px solid rgba(217, 225, 237, 0.6);
 
   border-radius: 6px;
 
   background: white;
+  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.06);
 
 }
 
@@ -398,7 +413,7 @@ const handleDeleteCancel = () => {
 
   font-size: 16px;
 
-  color: #1f2937;
+  color: #0a0e27;
 
   font-weight: 500;
 
