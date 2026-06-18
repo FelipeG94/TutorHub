@@ -30,7 +30,12 @@ const navigationLinks = computed(() => [
     : []),
 ])
 
-const isActive = (path) => route.path === path || route.path.startsWith(`${path}/`)
+const isActive = (path) => {
+  if (path === '/tareas') {
+    return route.path === '/tareas' || route.path.startsWith('/tareas/')
+  }
+  return route.path === path
+}
 
 const toggleMenu = () => {
   menuOpen.value = !menuOpen.value
@@ -99,12 +104,25 @@ const handleLogout = () => {
   z-index: 30;
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 1rem 1.25rem;
-  background: rgba(255, 255, 255, 0.94);
-  backdrop-filter: blur(18px);
-  border-bottom: 1px solid rgba(148, 163, 184, 0.22);
-  box-shadow: 0 8px 30px rgba(15, 23, 42, 0.04);
+  gap: 1.5rem;
+  padding: 1rem 1.5rem;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(217, 225, 237, 0.6);
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.08);
+}
+
+@media (max-width: 768px) {
+  .app-navbar {
+    padding: 0.875rem 1rem;
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-navbar {
+    padding: 0.75rem 0.875rem;
+  }
 }
 
 .app-navbar__brand {
@@ -115,18 +133,25 @@ const handleLogout = () => {
   text-decoration: none;
   color: inherit;
   flex: 0 0 auto;
+  transition: transform 0.2s ease;
+}
+
+.app-navbar__brand:hover {
+  transform: scale(1.02);
 }
 
 .app-navbar__brand-mark {
   width: 2.5rem;
   height: 2.5rem;
-  border-radius: 0.85rem;
+  border-radius: 0.75rem;
   display: grid;
   place-items: center;
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
   color: #fff;
   font-weight: 700;
   letter-spacing: 0.08em;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
 }
 
 .app-navbar__brand-text {
@@ -137,75 +162,85 @@ const handleLogout = () => {
 
 .app-navbar__brand-text strong {
   font-size: 1rem;
+  font-weight: 700;
   color: #0f172a;
 }
 
 .app-navbar__brand-text small {
+  font-size: 0.75rem;
   color: #64748b;
 }
 
 .app-navbar__toggle {
   display: none;
-  width: 2.75rem;
-  height: 2.75rem;
+  width: 2.5rem;
+  height: 2.5rem;
   margin-left: auto;
   border: 0;
-  border-radius: 0.9rem;
+  border-radius: 0.75rem;
   background: #eff6ff;
   cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.app-navbar__toggle:hover {
+  background: #dbeafe;
 }
 
 .app-navbar__toggle span {
   display: block;
   width: 1.15rem;
   height: 2px;
-  margin: 0.22rem auto;
+  margin: 0.25rem auto;
   border-radius: 999px;
   background: #1e293b;
+  transition: all 0.3s ease;
 }
 
 .app-navbar__shell {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: 1.5rem;
   flex: 1 1 auto;
 }
 
 .app-navbar__links {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.25rem;
   justify-content: center;
   flex: 1 1 auto;
 }
 
 .app-navbar__link {
-  padding: 0.7rem 0.95rem;
-  border-radius: 999px;
+  padding: 0.65rem 1rem;
+  border-radius: 0.75rem;
   text-decoration: none;
-  color: #475569;
+  color: #3a4a5c;
   font-weight: 600;
-  transition:
-    background-color 0.18s ease,
-    color 0.18s ease,
-    transform 0.18s ease;
+  font-size: 0.95rem;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
 }
 
 .app-navbar__link:hover {
-  background: #eaf2ff;
-  color: #0f172a;
+  background: #e8f1ff;
+  color: #0a0e27;
+  transform: translateY(-1px);
 }
 
 .app-navbar__link.active {
-  background: #2563eb;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
   color: #ffffff;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35);
 }
 
 .app-navbar__user {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 1rem;
   flex: 0 0 auto;
 }
 
@@ -216,22 +251,33 @@ const handleLogout = () => {
   white-space: nowrap;
   color: #334155;
   font-weight: 600;
+  font-size: 0.95rem;
 }
 
 .app-navbar__logout {
   border: 0;
-  border-radius: 999px;
-  padding: 0.72rem 1rem;
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
-  color: #ffffff;
+  border-radius: 0.75rem;
+  padding: 0.65rem 1.25rem;
   font: inherit;
   font-weight: 600;
+  font-size: 0.95rem;
   cursor: pointer;
-  transition: opacity 0.18s ease;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
 }
 
 .app-navbar__logout:hover {
-  opacity: 0.92;
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
+}
+
+.app-navbar__logout:active {
+  transform: translateY(0);
 }
 
 @media (max-width: 768px) {
@@ -240,7 +286,9 @@ const handleLogout = () => {
   }
 
   .app-navbar__toggle {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .app-navbar__shell {
@@ -248,7 +296,10 @@ const handleLogout = () => {
     width: 100%;
     flex-direction: column;
     align-items: stretch;
-    padding-top: 0.5rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid #e2e8f0;
+    gap: 0.75rem;
+    order: 3;
   }
 
   .app-navbar__shell.is-open {
@@ -258,22 +309,65 @@ const handleLogout = () => {
   .app-navbar__links {
     flex-direction: column;
     align-items: stretch;
+    gap: 0.5rem;
   }
 
   .app-navbar__link {
     width: 100%;
     text-align: center;
+    padding: 0.6rem;
   }
 
   .app-navbar__user {
     flex-direction: column;
     align-items: stretch;
+    gap: 0.5rem;
   }
 
-  .app-navbar__email,
+  .app-navbar__email {
+    max-width: 100%;
+    text-align: center;
+    padding: 0.5rem;
+  }
+
   .app-navbar__logout {
     width: 100%;
     text-align: center;
+    padding: 0.65rem 1rem;
+  }
+
+  .app-navbar__brand-text small {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-navbar {
+    gap: 0.75rem;
+  }
+
+  .app-navbar__brand-mark {
+    width: 2rem;
+    height: 2rem;
+    font-size: 0.85rem;
+  }
+
+  .app-navbar__brand-text strong {
+    font-size: 0.9rem;
+  }
+
+  .app-navbar__link {
+    font-size: 0.9rem;
+    padding: 0.55rem 0.75rem;
+  }
+
+  .app-navbar__email {
+    font-size: 0.85rem;
+  }
+
+  .app-navbar__logout {
+    font-size: 0.9rem;
+    padding: 0.55rem 0.9rem;
   }
 }
 </style>

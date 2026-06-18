@@ -79,9 +79,33 @@ const handleSubmit = async (payload) => {
 }
 
 const handleEdit = (task) => openModal(task)
-const handleDelete = async (id) => {
-  await taskStore.deleteTask(id)
+
+const isDeleteModalOpen = ref(false)
+const taskToDelete = ref(null)
+
+const handleDeleteClick = (taskId) => {
+  taskToDelete.value = taskId
+  isDeleteModalOpen.value = true
 }
+
+const confirmDelete = async () => {
+  if (!taskToDelete.value) return
+
+  try {
+    await taskStore.deleteTask(taskToDelete.value)
+  } catch (err) {
+    console.error(err)
+  } finally {
+    isDeleteModalOpen.value = false
+    taskToDelete.value = null
+  }
+}
+
+const cancelDelete = () => {
+  isDeleteModalOpen.value = false
+  taskToDelete.value = null
+}
+
 const handleToggle = async (id) => {
   await taskStore.toggleStatus(id)
 }
@@ -128,7 +152,7 @@ onMounted(loadData)
       :loading="taskStore.isLoading || categoryStore.isLoading"
       @toggle="handleToggle"
       @edit="handleEdit"
-      @delete="handleDelete"
+      @delete="handleDeleteClick"
     />
 
     <AppModal :isOpen="isModalOpen" :title="selectedTask ? 'Editar tarea' : 'Nueva tarea'" @close="closeModal">
@@ -141,49 +165,159 @@ onMounted(loadData)
         @cancel="closeModal"
       />
     </AppModal>
+
+    <AppModal :isOpen="isDeleteModalOpen" title="Confirmar eliminación" @close="cancelDelete">
+      <div class="delete-confirmation">
+        <p>¿Estás seguro de que querés eliminar esta tarea?</p>
+        <p class="delete-confirmation__warning">Esta acción no se puede deshacer.</p>
+        <div class="delete-confirmation__actions">
+          <AppButton variant="secondary" @click="cancelDelete">Cancelar</AppButton>
+          <AppButton variant="danger" @click="confirmDelete" :loading="taskStore.isLoading">Eliminar</AppButton>
+        </div>
+      </div>
+    </AppModal>
   </main>
 </template>
 
 <style scoped>
 .page-shell {
-  padding: 24px;
-  max-width: 1200px;
-  margin: 0 auto;
+  width: 100%;
+  min-height: 100vh;
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 2rem;
+}
+
+@media (min-width: 640px) {
+  .page-shell {
+    padding: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .page-shell {
+    padding: 2.5rem;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
 }
 
 .page-header {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  justify-content: space-between;
-  align-items: center;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1.5rem;
+  align-items: start;
+  width: 100%;
+}
+
+.page-header > div {
+  min-width: 0;
 }
 
 .page-actions {
   display: flex;
   gap: 0.75rem;
   flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+@media (max-width: 640px) {
+  .page-header {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .page-actions {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .page-actions :deep(button) {
+    flex: 1;
+  }
 }
 
 .page-shell h1 {
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #0f172a;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+@media (min-width: 640px) {
+  .page-shell h1 {
+    font-size: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .page-shell h1 {
+    font-size: 2.5rem;
+  }
 }
 
 .page-shell p {
   margin: 0.5rem 0 0;
-  color: #475569;
+  color: #64748b;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+@media (min-width: 640px) {
+  .page-shell p {
+    font-size: 1rem;
+  }
 }
 
 .view-alert {
-  margin: 1rem 0;
+  margin: 0;
   padding: 1rem 1.25rem;
-  border-radius: 1rem;
-  border: 1px solid rgba(220, 38, 38, 0.25);
-  background: rgba(254, 226, 226, 0.75);
-  color: #991b1b;
+  border-radius: 0.875rem;
+  border: 1px solid #fca5a5;
+  background: #fee2e2;
+  color: #7f1d1d;
+  font-weight: 500;
+  animation: slideIn 0.3s ease-out;
 }
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.delete-confirmation {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.delete-confirmation p {
+  margin: 0;
+  color: #334155;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.delete-confirmation__warning {
+  color: #ea580c;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.delete-confirmation__actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  margin-top: 0.5rem;
+}
+
 </style>
