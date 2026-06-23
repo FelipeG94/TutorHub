@@ -180,10 +180,6 @@ const handleDeleteCancel = () => {
 
   width: 100%;
 
-  max-width: 100%;
-
-  margin: 0 auto;
-
 }
 
 @media (min-width: 1024px) {
@@ -191,8 +187,6 @@ const handleDeleteCancel = () => {
   .categories-view {
 
     padding: 32px;
-
-    max-width: 1240px;
 
   }
 

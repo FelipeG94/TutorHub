@@ -198,8 +198,6 @@ onMounted(loadData)
 @media (min-width: 1024px) {
   .page-shell {
     padding: 2.5rem;
-    max-width: 1400px;
-    margin: 0 auto;
   }
 }
 

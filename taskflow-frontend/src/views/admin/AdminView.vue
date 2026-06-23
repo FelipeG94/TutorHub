@@ -114,8 +114,7 @@ const userProgress = computed(() => {
   flex-direction: column;
   gap: 40px;
   padding: 24px;
-  max-width: 1400px;
-  margin: 0 auto;
+  width: 100%;
 }
 
 .admin-header {

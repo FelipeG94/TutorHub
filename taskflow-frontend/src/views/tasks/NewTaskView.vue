@@ -53,8 +53,7 @@ onMounted(async () => {
 
 <style scoped>
 .page-shell {
-  max-width: 760px;
-  margin: 0 auto;
+  width: 100%;
   padding: 24px;
 }
 
